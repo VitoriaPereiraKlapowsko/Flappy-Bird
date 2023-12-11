@@ -36,6 +36,7 @@ let gravidade = 0.4; // Gravidade aplicada ao pássaro
 
 let jogoEncerrado = false; // Indica se o jogo está encerrado
 let pontuacao = 0; // Pontuação do jogador
+let dinheiroGanho = 0;
 
 // Aguarda até que a página HTML seja totalmente carregada antes de executar o código
 window.onload = function () {
@@ -194,13 +195,26 @@ function detectarColisao(passaro, cano) {
     return false;
 }
 
+function atualizarPontuacao() {
+    pontuacao += 0; 
+    atualizarDinheiroGanho();
+}
+
+function atualizarDinheiroGanho() {
+    dinheiroGanho = pontuacao * 0.1; 
+    const dinheiroGanhoElement = document.getElementById("dinheiroGanho");
+    dinheiroGanhoElement.textContent = "$" + dinheiroGanho.toFixed(2);
+}
+setInterval(atualizarPontuacao, 1000);
+
+
 document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("botaoApostar").addEventListener("click", function() {
         let quantiaAposta = parseFloat(document.getElementById("quantiaAposta").value);
         if (!isNaN(quantiaAposta) && quantiaAposta > 0) {
             alert("Quantia de $" + quantiaAposta.toFixed(2) + " apostada com sucesso!");
         } else {
-            alert("Insira uma quantia válida para apostar.");
+            alert("Insira uma quantia válida para apostar...");
         }
     });
 });
