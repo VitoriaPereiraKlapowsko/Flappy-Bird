@@ -193,3 +193,14 @@ function detectarColisao(passaro, cano) {
 
     return false;
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("botaoApostar").addEventListener("click", function() {
+        let quantiaAposta = parseFloat(document.getElementById("quantiaAposta").value);
+        if (!isNaN(quantiaAposta) && quantiaAposta > 0) {
+            alert("Quantia de $" + quantiaAposta.toFixed(2) + " apostada com sucesso!");
+        } else {
+            alert("Insira uma quantia válida para apostar.");
+        }
+    });
+});
