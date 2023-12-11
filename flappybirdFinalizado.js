@@ -37,6 +37,7 @@ let gravidade = 0.4; // Gravidade aplicada ao pássaro
 let jogoEncerrado = false; // Indica se o jogo está encerrado
 let pontuacao = 0; // Pontuação do jogador
 let dinheiroGanho = 0;
+let dinheiroInserido = 0;
 
 // Aguarda até que a página HTML seja totalmente carregada antes de executar o código
 window.onload = function () {
@@ -196,20 +197,20 @@ function detectarColisao(passaro, cano) {
 }
 
 function atualizarPontuacao() {
-    pontuacao += 0; 
+    pontuacao += 0;
     atualizarDinheiroGanho();
 }
 
 function atualizarDinheiroGanho() {
-    dinheiroGanho = pontuacao * 0.1; 
+    dinheiroGanho = pontuacao * 5.00;
     const dinheiroGanhoElement = document.getElementById("dinheiroGanho");
     dinheiroGanhoElement.textContent = "$" + dinheiroGanho.toFixed(2);
 }
 setInterval(atualizarPontuacao, 1000);
 
 
-document.addEventListener("DOMContentLoaded", function() {
-    document.getElementById("botaoApostar").addEventListener("click", function() {
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("botaoApostar").addEventListener("click", function () {
         let quantiaAposta = parseFloat(document.getElementById("quantiaAposta").value);
         if (!isNaN(quantiaAposta) && quantiaAposta > 0) {
             alert("Quantia de $" + quantiaAposta.toFixed(2) + " apostada com sucesso!");
@@ -218,3 +219,18 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 });
+
+function atualizarDinheiroInserido(valor) {
+    dinheiroInserido = valor;
+    ajustarDificuldadeDoJogo();
+}
+
+function ajustarDificuldadeDoJogo() {
+    if (dinheiroInserido > 100) {
+        velocidadeX = -4;
+        velocidadeY = -5;
+    } else {
+        velocidadeX = -2;
+        velocidadeY = -3;
+    }
+}
