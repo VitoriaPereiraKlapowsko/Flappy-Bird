@@ -36,6 +36,10 @@ let gravidade = 0.4; // Gravidade aplicada ao pássaro
 
 let jogoEncerrado = false; // Indica se o jogo está encerrado
 let pontuacao = 0; // Pontuação do jogador
+
+let dinheiroApostado = 0;
+let jogoFicouMaisDificil = false;
+let fatorAumentoVelocidade = 2.5; 
 let dinheiroGanho = 0;
 let dinheiroInserido = 0;
 
@@ -48,16 +52,15 @@ window.onload = function () {
     tabuleiro.height = alturaTabuleiro;
     tabuleiro.width = larguraTabuleiro;
 
-    // Obtém o contexto de desenho 2D do tabuleiro
-    contexto = tabuleiro.getContext("2d"); // Usado para desenhar no tabuleiro
+  // Obtém o contexto de desenho 2D do tabuleiro
+    contexto = tabuleiro.getContext("2d");// Usado para desenhar no tabuleiro
 
-    // Desenha a imagem do pássaro no tabuleiro quando ela é carregada
-    imagemPassaro = new Image(); //Construtor padrão para criar objetos de imagem
-    imagemPassaro.src = "assets/flappybird.png"; //Define o PNG da imagem
+  // Desenha a imagem do pássaro no tabuleiro quando ela é carregada
+    imagemPassaro = new Image();//Construtor padrão para criar objetos de imagem
+    imagemPassaro.src = "assets/flappybird.png";//Define o PNG da imagem
     imagemPassaro.onload = function () {
         contexto.drawImage(imagemPassaro, passaro.x, passaro.y, passaro.largura, passaro.altura);
     }
-
 
     // Carrega a imagem do cano superior
     imagemCanoSuperior = new Image();
@@ -67,6 +70,9 @@ window.onload = function () {
     imagemCanoInferior = new Image();
     imagemCanoInferior.src = "assets/cano-baixo.png";
 
+    dinheiroApostado = parseFloat(prompt("Insira um valor que você quer apostar"));
+    document.getElementById("quantiaApostada").textContent = dinheiroApostado.toFixed(2);
+
     // Inicia o loop de atualização do jogo usando requestAnimationFrame
     requestAnimationFrame(atualizar);
 
@@ -75,7 +81,6 @@ window.onload = function () {
 
     // Adiciona um ouvinte de evento para responder às teclas pressionadas
     document.addEventListener("keydown", moverPassaro);
-
 }
 
 function moverPassaro(evento) {
@@ -84,6 +89,11 @@ function moverPassaro(evento) {
         // Ajusta a velocidade vertical para simular um salto
         velocidadeY = -6;
 
+        if (dinheiroApostado > 100) {
+            setTimeout(function () {
+                velocidadeY = 0; 
+            }, 300);
+        }
     }
 }
 
@@ -98,6 +108,12 @@ function atualizar() {
 
     // Limpa a área do tabuleiro para desenhar a próxima moldura
     contexto.clearRect(0, 0, tabuleiro.width, tabuleiro.height);
+
+    if (dinheiroApostado > 100 && !jogoFicouMaisDificil) {
+        velocidadeX *= fatorAumentoVelocidade; 
+        jogoFicouMaisDificil = true;
+        console.log("Jogo hardcore agora!");
+    }
 
     // Pássaro
     // Aumenta a velocidade vertical do pássaro aplicando a força da gravidade
@@ -168,7 +184,6 @@ function gerarCanos() {
     // Adiciona o cano superior ao array de canos
     arrayCanos.push(canoSuperior);
 
-    // Cria um objeto representando o cano inferior
     let canoInferior = {
         imagem: imagemCanoInferior, // Imagem do cano inferior
         x: posicaoXCano, // Posição inicial do cano inferior no eixo X
@@ -177,12 +192,9 @@ function gerarCanos() {
         altura: alturaCano, // Altura do cano
         passou: false // Indica se o pássaro já passou por esse cano
     };
-    // Adiciona o cano inferior ao array de canos
     arrayCanos.push(canoInferior);
 }
 
-
-// Função para detectar colisão entre dois objetos retangulares (objetoA e objetoB)
 function detectarColisao(passaro, cano) {
     //verifica se a sobreposição de objetos
     const colisaoX = passaro.x < cano.x + cano.largura && passaro.x + passaro.largura > cano.x;
@@ -234,3 +246,4 @@ function ajustarDificuldadeDoJogo() {
         velocidadeY = -3;
     }
 }
+
